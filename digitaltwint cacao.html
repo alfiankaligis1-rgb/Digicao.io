@@ -1,0 +1,1196 @@
+# Digital Twin Cacao Landscape — Full Upgrade
+
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital Twin Cacao Landscape</title>
+
+  <!-- TAILWIND -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- LEAFLET -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- HEATMAP -->
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+  <!-- CHART -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      transition: 0.5s;
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card-hover:hover {
+      transform: translateY(-8px);
+      transition: 0.4s;
+    }
+
+    .leaflet-container {
+      border-radius: 20px;
+    }
+
+    .glass {
+      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,0.08);
+    }
+
+  </style>
+</head>
+
+<body class="bg-green-50 text-gray-800">
+
+<!-- LOADING -->
+<div
+  id="loadingScreen"
+  class="fixed inset-0 bg-green-900 flex items-center justify-center z-50"
+>
+
+  <div class="text-center text-white">
+
+    <div class="animate-spin rounded-full h-24 w-24 border-b-4 border-white mx-auto"></div>
+
+    <h2 class="mt-6 text-3xl font-bold">
+      AI Ecosystem Initializing...
+    </h2>
+
+  </div>
+
+</div>
+
+<!-- HEADER -->
+<header class="bg-green-800 text-white shadow-lg sticky top-0 z-40">
+
+  <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+
+    <div>
+
+      <h1 class="text-4xl font-bold">
+        Digital Twin Cacao Landscape
+      </h1>
+
+      <p class="text-green-100 mt-2">
+        Simulasi Ekosistem Kakao Berbasis Big Data dan AI
+      </p>
+
+    </div>
+
+    <div class="flex gap-4">
+
+      <button
+        onclick="toggleDarkMode()"
+        class="bg-black text-white px-5 py-2 rounded-xl"
+      >
+        🌙 Dark Mode
+      </button>
+
+      <button
+        class="bg-white text-green-800 px-5 py-2 rounded-xl font-semibold hover:bg-green-100"
+      >
+        Dashboard Live
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+<!-- HERO -->
+<section
+  class="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center fade-in"
+>
+
+  <div>
+
+    <div class="flex items-center gap-3 mb-4">
+
+      <div class="w-4 h-4 bg-green-500 rounded-full animate-ping"></div>
+
+      <span class="font-semibold text-green-700">
+        Sensor IoT Aktif
+      </span>
+
+    </div>
+
+    <h2 class="text-5xl font-bold leading-tight text-green-900">
+      Smart Simulation untuk Ekosistem Kakao Berkelanjutan
+    </h2>
+
+    <p class="mt-6 text-lg text-gray-700 leading-relaxed">
+      Platform Digital Twin berbasis Artificial Intelligence,
+      IoT, Big Data, dan Cloud Computing untuk memonitor,
+      memprediksi, dan mensimulasikan kondisi perkebunan kakao secara real-time.
+    </p>
+
+    <div class="mt-8 flex gap-4 flex-wrap">
+
+      <button
+        onclick="mulaiSimulasi()"
+        class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-2xl font-semibold"
+      >
+        Mulai Simulasi
+      </button>
+
+      <button
+        onclick="lihatMonitoring()"
+        class="border border-green-700 text-green-700 hover:bg-green-100 px-6 py-3 rounded-2xl font-semibold"
+      >
+        Lihat Monitoring
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="bg-white rounded-3xl shadow-2xl p-6">
+
+    <img
+      src="https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=1200&auto=format&fit=crop"
+      class="rounded-2xl w-full h-[400px] object-cover"
+      alt="Kebun Kakao"
+    />
+
+  </div>
+
+</section>
+
+<!-- AI PANEL -->
+<section class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="bg-gradient-to-r from-green-700 to-green-900 text-white rounded-3xl p-10 shadow-2xl">
+
+    <h2 class="text-4xl font-bold">
+      🤖 AI Prediction Engine
+    </h2>
+
+    <p class="mt-4 text-lg">
+      Artificial Intelligence memprediksi potensi gagal panen,
+      serangan hama, dan peningkatan produksi berdasarkan data IoT.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-6 mt-8">
+
+      <div class="glass p-6 rounded-2xl">
+        <h3 class="text-2xl font-bold">
+          🌱 Prediksi Produksi
+        </h3>
+
+        <p class="text-5xl font-bold mt-4">
+          +23%
+        </p>
+      </div>
+
+      <div class="glass p-6 rounded-2xl">
+        <h3 class="text-2xl font-bold">
+          ⚠️ Risiko Hama
+        </h3>
+
+        <p class="text-5xl font-bold mt-4">
+          Rendah
+        </p>
+      </div>
+
+      <div class="glass p-6 rounded-2xl">
+        <h3 class="text-2xl font-bold">
+          ☁️ Prediksi Cuaca
+        </h3>
+
+        <p class="text-5xl font-bold mt-4">
+          Hujan
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- PILIH WILAYAH -->
+<section class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="bg-white rounded-3xl shadow-xl p-8">
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+      <div>
+
+        <h2 class="text-4xl font-bold text-green-800">
+          🌍 Pilih Wilayah Monitoring
+        </h2>
+
+        <p class="text-gray-600 mt-2">
+          Data berubah sesuai cloud database.
+        </p>
+
+      </div>
+
+      <select
+        id="regionSelect"
+        onchange="gantiDaerah()"
+        class="border-2 border-green-600 rounded-2xl px-5 py-3 text-lg font-semibold"
+      >
+
+        <option value="Sulawesi Barat">Sulawesi Barat</option>
+        <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+        <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+        <option value="Papua">Papua</option>
+        <option value="Kalimantan">Kalimantan</option>
+
+      </select>
+
+    </div>
+
+    <!-- MAP -->
+    <div class="mt-10">
+
+      <h3 class="text-3xl font-bold text-green-800 mb-5">
+        🛰️ Satelit Monitoring Kakao
+      </h3>
+
+      <div class="bg-green-50 rounded-3xl p-5 shadow-inner">
+
+        <div
+          id="satelliteMap"
+          class="w-full h-[500px] border-4 border-green-600"
+        ></div>
+
+        <div
+          id="mapInfo"
+          class="mt-5 bg-white p-5 rounded-2xl shadow-lg"
+        >
+
+          <h4 class="text-2xl font-bold text-green-700">
+            Sulawesi Tengah
+          </h4>
+
+          <p class="mt-2 text-gray-700">
+            Produksi kakao tinggi dengan kondisi ekosistem stabil.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- BPS CLOUD -->
+<section class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="bg-white rounded-3xl shadow-2xl p-8">
+
+    <div class="flex justify-between items-center flex-wrap gap-4">
+
+      <div>
+
+        <h2 class="text-3xl font-bold text-green-800">
+          ☁️ Cloud Big Data BPS Indonesia
+        </h2>
+
+        <p class="text-gray-600 mt-2">
+          Sinkronisasi data statistik kakao nasional berbasis cloud BPS.
+        </p>
+
+      </div>
+
+      <button
+        onclick="sinkronisasiBPS()"
+        class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-2xl font-semibold"
+      >
+        Sinkronisasi BPS
+      </button>
+
+    </div>
+
+    <div id="bpsContainer"></div>
+
+  </div>
+
+</section>
+
+<!-- REALTIME WEATHER -->
+<section class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="bg-green-50 rounded-3xl p-8 shadow-xl">
+
+    <div class="flex justify-between items-center flex-wrap gap-4">
+
+      <div>
+
+        <h2 class="text-3xl font-bold text-green-800">
+          ☁️ Sinkronisasi Cuaca & Tanah Realtime
+        </h2>
+
+        <p class="text-gray-600 mt-2">
+          Data otomatis tersinkronisasi dari API cuaca dan sensor IoT.
+        </p>
+
+      </div>
+
+      <button
+        onclick="sinkronisasiCuaca()"
+        class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-2xl font-semibold"
+      >
+        Sinkronisasi Data
+      </button>
+
+    </div>
+
+    <div id="realtimeWeather"></div>
+
+  </div>
+
+</section>
+
+<!-- CLOUD DATA -->
+<section class="max-w-7xl mx-auto px-6 py-10">
+
+  <div
+    id="cloudDataContainer"
+    class="grid md:grid-cols-3 gap-6"
+  ></div>
+
+</section>
+
+<!-- SIMULATION -->
+<div
+  id="simulationStatus"
+  class="max-w-7xl mx-auto px-6 py-10"
+></div>
+
+<!-- MONITORING -->
+<div
+  id="monitoringStatus"
+  class="max-w-7xl mx-auto px-6 py-10"
+></div>
+
+<!-- STATISTICS -->
+<section class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="grid md:grid-cols-4 gap-6">
+
+    <div class="bg-white rounded-3xl shadow-lg p-6 text-center card-hover">
+
+      <div class="text-5xl">🌱</div>
+
+      <h3 class="mt-4 text-lg font-semibold text-gray-600">
+        Produksi Kakao
+      </h3>
+
+      <p class="text-4xl font-bold text-green-700 mt-2">
+        12.5 Ton
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-lg p-6 text-center card-hover">
+
+      <div class="text-5xl">💧</div>
+
+      <h3 class="mt-4 text-lg font-semibold text-gray-600">
+        Kelembapan
+      </h3>
+
+      <p class="text-4xl font-bold text-blue-700 mt-2">
+        72%
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-lg p-6 text-center card-hover">
+
+      <div class="text-5xl">☀️</div>
+
+      <h3 class="mt-4 text-lg font-semibold text-gray-600">
+        Suhu Kebun
+      </h3>
+
+      <p class="text-4xl font-bold text-orange-600 mt-2">
+        28°C
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-lg p-6 text-center card-hover">
+
+      <div class="text-5xl">📈</div>
+
+      <h3 class="mt-4 text-lg font-semibold text-gray-600">
+        Prediksi Panen
+      </h3>
+
+      <p class="text-4xl font-bold text-green-700 mt-2">
+        +18%
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- CHART -->
+<section class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="bg-white rounded-3xl shadow-2xl p-8">
+
+    <h2 class="text-3xl font-bold text-green-800 mb-6">
+      📊 Grafik Monitoring Real-Time
+    </h2>
+
+    <canvas id="cacaoChart" height="100"></canvas>
+
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-green-900 text-white py-10 mt-10">
+
+  <div class="max-w-7xl mx-auto px-6 text-center">
+
+    <h3 class="text-3xl font-bold">
+      Digital Twin Cacao Landscape
+    </h3>
+
+    <p class="mt-3 text-green-200">
+      Smart Agriculture • AI • Big Data • Sustainable Ecosystem
+    </p>
+
+    <p class="mt-6 text-sm text-green-300">
+      © 2026 Digital Twin Cacao Landscape
+    </p>
+
+  </div>
+
+</footer>
+
+<script>
+
+// DATABASE
+const cloudDatabase = {
+
+  "Sulawesi Barat": {
+    produksi: "12.5 Ton",
+    suhu: "28°C",
+    kelembapan: "72%",
+    ph: "6.8",
+    hujan: "145 mm",
+    status: "Stabil",
+    info: "Wilayah kakao berkembang dengan ekosistem stabil.",
+    koordinat: [-2.8441, 119.2321]
+  },
+
+  "Sulawesi Selatan": {
+    produksi: "15.2 Ton",
+    suhu: "30°C",
+    kelembapan: "69%",
+    ph: "6.5",
+    hujan: "170 mm",
+    status: "Optimal",
+    info: "Sentra produksi kakao terbesar di Indonesia.",
+    koordinat: [-3.6688, 119.9740]
+  },
+
+  "Sulawesi Tengah": {
+    produksi: "11.8 Ton",
+    suhu: "27°C",
+    kelembapan: "75%",
+    ph: "6.9",
+    hujan: "150 mm",
+    status: "Baik",
+    info: "Produksi kakao tinggi dengan kondisi ekosistem stabil.",
+    koordinat: [-1.4300, 121.4456]
+  },
+
+  "Papua": {
+    produksi: "18.1 Ton",
+    suhu: "26°C",
+    kelembapan: "82%",
+    ph: "7.0",
+    hujan: "210 mm",
+    status: "Sangat Subur",
+    info: "Wilayah dengan kelembapan tinggi dan tanah subur.",
+    koordinat: [-4.2699, 138.0804]
+  },
+
+  "Kalimantan": {
+    produksi: "13.7 Ton",
+    suhu: "29°C",
+    kelembapan: "74%",
+    ph: "6.7",
+    hujan: "165 mm",
+    status: "Produktif",
+    info: "Ekosistem tropis mendukung pertumbuhan kakao.",
+    koordinat: [0.9619, 114.5548]
+  }
+
+};
+
+// MAP
+const map = L.map('satelliteMap').setView(
+  [-1.4300, 121.4456],
+  5
+);
+
+L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution: 'Tiles © Esri'
+  }
+).addTo(map);
+
+const marker = L.marker(
+  [-1.4300, 121.4456]
+).addTo(map);
+
+marker.bindPopup(
+  '🌱 Monitoring Kakao'
+).openPopup();
+
+// HEATMAP
+L.heatLayer([
+
+  [-3.6,119.9,0.8],
+  [-1.4,121.4,0.9],
+  [-4.2,138.0,0.7],
+  [0.9,114.5,0.6]
+
+], {
+
+  radius: 40
+
+}).addTo(map);
+
+// GANTI DAERAH
+function gantiDaerah() {
+
+  const wilayah =
+    document.getElementById('regionSelect').value;
+
+  const data = cloudDatabase[wilayah];
+
+  const container =
+    document.getElementById('cloudDataContainer');
+
+  const mapInfo =
+    document.getElementById('mapInfo');
+
+  map.setView(data.koordinat, 7);
+
+  marker
+    .setLatLng(data.koordinat)
+    .bindPopup(`🌱 Monitoring Kakao ${wilayah}`)
+    .openPopup();
+
+  mapInfo.innerHTML = `
+
+    <h4 class="text-2xl font-bold text-green-700">
+      ${wilayah}
+    </h4>
+
+    <p class="mt-2 text-gray-700">
+      ${data.info}
+    </p>
+
+  `;
+
+  container.innerHTML = `
+
+    <div class="bg-white rounded-3xl shadow-xl p-6 text-center fade-in">
+
+      <div class="text-5xl">🌱</div>
+
+      <h3 class="mt-4 text-xl font-bold text-green-800">
+        Produksi Kakao
+      </h3>
+
+      <p class="text-4xl font-bold mt-4 text-green-700">
+        ${data.produksi}
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl p-6 text-center fade-in">
+
+      <div class="text-5xl">🌡️</div>
+
+      <h3 class="mt-4 text-xl font-bold text-green-800">
+        Suhu
+      </h3>
+
+      <p class="text-4xl font-bold mt-4 text-orange-500">
+        ${data.suhu}
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl p-6 text-center fade-in">
+
+      <div class="text-5xl">💧</div>
+
+      <h3 class="mt-4 text-xl font-bold text-green-800">
+        Kelembapan
+      </h3>
+
+      <p class="text-4xl font-bold mt-4 text-blue-600">
+        ${data.kelembapan}
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl p-6 text-center fade-in">
+
+      <div class="text-5xl">☁️</div>
+
+      <h3 class="mt-4 text-xl font-bold text-green-800">
+        Curah Hujan
+      </h3>
+
+      <p class="text-4xl font-bold mt-4 text-gray-800">
+        ${data.hujan}
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl p-6 text-center fade-in">
+
+      <div class="text-5xl">🌱</div>
+
+      <h3 class="mt-4 text-xl font-bold text-green-800">
+        pH Tanah
+      </h3>
+
+      <p class="text-4xl font-bold mt-4 text-green-700">
+        ${data.ph}
+      </p>
+
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl p-6 text-center fade-in">
+
+      <div class="text-5xl">📊</div>
+
+      <h3 class="mt-4 text-xl font-bold text-green-800">
+        Status Ekosistem
+      </h3>
+
+      <p class="text-3xl font-bold mt-4 text-green-700">
+        ${data.status}
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+// SIMULASI
+function mulaiSimulasi() {
+
+  const statusBox =
+    document.getElementById('simulationStatus');
+
+  statusBox.innerHTML = `
+
+    <div class="bg-yellow-100 border border-yellow-300 text-yellow-800 p-6 rounded-2xl text-center animate-pulse">
+
+      <h2 class="text-2xl font-bold">
+        ⏳ Simulasi Sedang Diproses...
+      </h2>
+
+      <p class="mt-2">
+        AI sedang menganalisis data cuaca,
+        tanah, dan sensor IoT.
+      </p>
+
+    </div>
+
+  `;
+
+  setTimeout(() => {
+
+    const produksi =
+      (10 + Math.random() * 5).toFixed(1);
+
+    const kelembapan =
+      (65 + Math.random() * 20).toFixed(0);
+
+    const suhu =
+      (25 + Math.random() * 5).toFixed(0);
+
+    const risiko = [
+      'Rendah',
+      'Sedang',
+      'Tinggi'
+    ];
+
+    const hasilRisiko =
+      risiko[Math.floor(Math.random() * risiko.length)];
+
+    statusBox.innerHTML = `
+
+      <div class="bg-green-100 border border-green-300 p-8 rounded-3xl shadow-lg fade-in">
+
+        <h2 class="text-3xl font-bold text-green-800 text-center">
+          ✅ Hasil Simulasi Digital Twin
+        </h2>
+
+        <div class="grid md:grid-cols-4 gap-6 mt-8">
+
+          <div class="bg-white p-6 rounded-2xl shadow text-center">
+
+            <div class="text-5xl">🌱</div>
+
+            <h3 class="mt-4 font-bold text-lg">
+              Prediksi Produksi
+            </h3>
+
+            <p class="text-4xl font-bold text-green-700 mt-3">
+              ${produksi} Ton
+            </p>
+
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow text-center">
+
+            <div class="text-5xl">💧</div>
+
+            <h3 class="mt-4 font-bold text-lg">
+              Kelembapan
+            </h3>
+
+            <p class="text-4xl font-bold text-blue-600 mt-3">
+              ${kelembapan}%
+            </p>
+
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow text-center">
+
+            <div class="text-5xl">☀️</div>
+
+            <h3 class="mt-4 font-bold text-lg">
+              Suhu
+            </h3>
+
+            <p class="text-4xl font-bold text-orange-500 mt-3">
+              ${suhu}°C
+            </p>
+
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl shadow text-center">
+
+            <div class="text-5xl">⚠️</div>
+
+            <h3 class="mt-4 font-bold text-lg">
+              Risiko Ekosistem
+            </h3>
+
+            <p class="text-4xl font-bold text-red-500 mt-3">
+              ${hasilRisiko}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }, 3000);
+
+}
+
+// MONITORING
+function lihatMonitoring() {
+
+  const monitoringBox =
+    document.getElementById('monitoringStatus');
+
+  monitoringBox.innerHTML = `
+
+    <div class="bg-white rounded-3xl shadow-2xl p-8 fade-in">
+
+      <div class="flex justify-between items-center flex-wrap gap-4">
+
+        <div>
+
+          <h2 class="text-4xl font-bold text-green-800">
+            📡 Monitoring Real-Time
+          </h2>
+
+          <p class="text-gray-600 mt-2">
+            Status kondisi kebun kakao berdasarkan sensor IoT
+          </p>
+
+        </div>
+
+        <div class="bg-green-100 text-green-700 px-4 py-2 rounded-full font-bold animate-pulse">
+          ONLINE
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+// DARK MODE
+function toggleDarkMode() {
+
+  document.body.classList.toggle('bg-gray-900');
+  document.body.classList.toggle('text-white');
+
+}
+
+// BPS CLOUD DATA
+async function sinkronisasiBPS() {
+
+  try {
+
+    // CONTOH SIMULASI DATA BPS CLOUD
+    // DAPAT DIGANTI DENGAN API RESMI BPS
+
+    const bpsData = {
+
+      'Sulawesi Barat': {
+        luasLahan: '154.230 Ha',
+        produktivitas: '1.82 Ton/Ha',
+        petani: '45.200',
+        ekspor: '18.4 Ribu Ton'
+      },
+
+      'Sulawesi Selatan': {
+        luasLahan: '287.510 Ha',
+        produktivitas: '2.14 Ton/Ha',
+        petani: '89.500',
+        ekspor: '32.8 Ribu Ton'
+      },
+
+      'Sulawesi Tengah': {
+        luasLahan: '248.400 Ha',
+        produktivitas: '1.97 Ton/Ha',
+        petani: '73.800',
+        ekspor: '27.1 Ribu Ton'
+      },
+
+      'Papua': {
+        luasLahan: '112.700 Ha',
+        produktivitas: '2.36 Ton/Ha',
+        petani: '29.200',
+        ekspor: '14.5 Ribu Ton'
+      },
+
+      'Kalimantan': {
+        luasLahan: '194.600 Ha',
+        produktivitas: '1.76 Ton/Ha',
+        petani: '58.900',
+        ekspor: '20.9 Ribu Ton'
+      }
+
+    };
+
+    const wilayah =
+      document.getElementById('regionSelect').value;
+
+    const data = bpsData[wilayah];
+
+    const bpsContainer =
+      document.getElementById('bpsContainer');
+
+    bpsContainer.innerHTML = `
+
+      <div class="grid md:grid-cols-4 gap-6 mt-8 fade-in">
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">🌾</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Luas Lahan
+          </h3>
+
+          <p class="text-3xl font-bold mt-4 text-green-700">
+            ${data.luasLahan}
+          </p>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">📈</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Produktivitas
+          </h3>
+
+          <p class="text-3xl font-bold mt-4 text-blue-700">
+            ${data.produktivitas}
+          </p>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">👨‍🌾</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Jumlah Petani
+          </h3>
+
+          <p class="text-3xl font-bold mt-4 text-orange-600">
+            ${data.petani}
+          </p>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">🚢</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Data Ekspor
+          </h3>
+
+          <p class="text-3xl font-bold mt-4 text-cyan-700">
+            ${data.ekspor}
+          </p>
+
+        </div>
+
+      </div>
+
+    `;
+
+  } catch (error) {
+
+    console.error('Gagal sinkronisasi BPS:', error);
+
+  }
+
+}
+
+// WEATHER & SOIL API SYNC
+async function sinkronisasiCuaca() {
+
+  try {
+
+    // GANTI API KEY DENGAN API KEY OPENWEATHERMILIK ANDA
+    const apiKey = 'YOUR_OPENWEATHER_API_KEY';
+
+    const wilayah =
+      document.getElementById('regionSelect').value;
+
+    const koordinat =
+      cloudDatabase[wilayah].koordinat;
+
+    const lat = koordinat[0];
+    const lon = koordinat[1];
+
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+    );
+
+    const weatherData = await response.json();
+
+    // DATA REALTIME
+    const suhuRealtime =
+      weatherData.main.temp.toFixed(1);
+
+    const kelembapanRealtime =
+      weatherData.main.humidity;
+
+    const curahHujanRealtime =
+      weatherData.rain
+      ? weatherData.rain['1h'] || 0
+      : 0;
+
+    // SIMULASI SENSOR KELEMBAPAN TANAH
+    const kelembapanTanah =
+      (50 + Math.random() * 40).toFixed(0);
+
+    // UPDATE DASHBOARD
+    const realtimeBox = document.getElementById('realtimeWeather');
+
+    realtimeBox.innerHTML = `
+
+      <div class="grid md:grid-cols-4 gap-6 mt-6 fade-in">
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">☀️</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Suhu Realtime
+          </h3>
+
+          <p class="text-4xl font-bold mt-4 text-orange-500">
+            ${suhuRealtime}°C
+          </p>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">💧</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Kelembapan Udara
+          </h3>
+
+          <p class="text-4xl font-bold mt-4 text-blue-600">
+            ${kelembapanRealtime}%
+          </p>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">🌧️</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Curah Hujan
+          </h3>
+
+          <p class="text-4xl font-bold mt-4 text-cyan-600">
+            ${curahHujanRealtime} mm
+          </p>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl p-6 text-center">
+
+          <div class="text-5xl">🌱</div>
+
+          <h3 class="mt-4 text-xl font-bold text-green-800">
+            Kelembapan Tanah
+          </h3>
+
+          <p class="text-4xl font-bold mt-4 text-green-700">
+            ${kelembapanTanah}%
+          </p>
+
+        </div>
+
+      </div>
+
+    `;
+
+  } catch (error) {
+
+    console.error('Gagal sinkronisasi cuaca:', error);
+
+  }
+
+}
+
+// CHART
+const ctx = document.getElementById('cacaoChart');
+
+new Chart(ctx, {
+
+  type: 'line',
+
+  data: {
+
+    labels: [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun'
+    ],
+
+    datasets: [
+
+      {
+        label: 'Produksi Kakao',
+        data: [10, 12, 14, 13, 15, 18],
+        borderColor: 'green',
+        backgroundColor: 'rgba(0,128,0,0.2)',
+        tension: 0.4
+      },
+
+      {
+        label: 'Kelembapan',
+        data: [65, 70, 72, 75, 73, 78],
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0,0,255,0.2)',
+        tension: 0.4
+      }
+
+    ]
+
+  },
+
+  options: {
+    responsive: true
+  }
+
+});
+
+// LOADING
+window.addEventListener('load', () => {
+
+  setTimeout(() => {
+
+    document
+      .getElementById('loadingScreen')
+      .style.display = 'none';
+
+  }, 2500);
+
+});
+
+// AUTO LOAD
+window.onload = () => {
+
+  gantiDaerah();
+  sinkronisasiCuaca();
+  sinkronisasiBPS();
+
+};
+
+</script>
+
+</body>
+</html>
+```
